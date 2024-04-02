@@ -2,6 +2,9 @@ import { databaseConfig } from "../config/database.js";
 import { Sequelize, DataTypes } from "sequelize";
 import { UserModel } from "./user.js";
 import VirtualCardModel from "./vcard.js";
+import InvoiceModel from "./invoice.js";
+import InvoiceRecipientModel from "./invoicerecipient.js";
+import InvoiceItemsModel from "./invoiceitems.js";
 
 // Create a Sequelize instance with the database configurations
 const sequelize = new Sequelize(
@@ -35,13 +38,23 @@ db.Sequelize = Sequelize;
 
 const User = UserModel(sequelize, DataTypes);
 const VirtualCard = VirtualCardModel(sequelize, DataTypes);
+const Invoice = InvoiceModel(sequelize, DataTypes);
+const InvoiceRecipient = InvoiceRecipientModel(sequelize, DataTypes);
+const InvoiceItems = InvoiceItemsModel(sequelize, DataTypes);
 
 // db relationships
 User.hasMany(VirtualCard)
+InvoiceRecipient.hasMany(Invoice)
+Invoice.hasMany(InvoiceItems)
+
 
 // Add our models
 db.users = User
 db.VirtualCard = VirtualCard
+db.Invoice = Invoice
+db.InvoiceRecipient = InvoiceRecipient
+db.InvoiceItems = InvoiceItems
+
 
 db.sequelize
   .sync({ alter: true })
